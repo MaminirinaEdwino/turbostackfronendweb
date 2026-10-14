@@ -237,8 +237,8 @@ export default function PageEditor({ projectName }) {
         const typeKey = prev.type === "static" ? "site_statique" : "web_app";
         const newPage = {
           id: Math.random().toString(36).substr(2, 9),
-          nom: "New Page " + (project?.site_statique?.pages?.length == undefined ? 0 : project.site_statique.pages.length),
-          uri: "/new-page-" + (project.site_statique.pages?.length == undefined ? 0 : project.site_statique.pages.length),
+          nom: "New Page " + (project?.site_statique?.pages?.length == undefined ? 0 : project?.site_statique?.pages?.length),
+          uri: "/new-page-" + (project.site_statique.pages?.length == undefined ? 0 : project?.site_statique?.pages?.length),
           content: [
             {
               id: Math.random().toString(36).substr(2, 9),
@@ -253,7 +253,7 @@ export default function PageEditor({ projectName }) {
         return { ...prev, [typeKey]: { ...prev[typeKey], pages: updatedPages } };
       });
     }
-    if (subscription.subscription == "free" && project.site_statique.pages.length < 5) {
+    if (subscription.subscription == "free" && (project?.site_statique?.pages?.length < 5 || project?.site_statique?.pages?.length == undefined)) {
       createPage()
     } else if (subscription.subscription == "pro") {
       createPage()
