@@ -21,7 +21,12 @@ import UnifiedEditor from "./layouts/projects/unifiedEditor";
 import HelpDocumentation from "./helpComponent";
 import { GoApp } from "./services/bridge";
 import WorkspaceNavigationBar from "./components/workspaceNavigation";
+import Login from "./Login";
+import Register from "./Register";
+import { useAuth } from "./hooks/useAuth";
+
 function App() {
+  const { isAuthenticated, authMode, setAuthMode, loginUser } = useAuth();
   const actualWindow = useSelector((state) => state.app.actualWindow);
   const actualProject = useSelector((state) => state.app.actualProject);
   const isDarkMode = useSelector((state) => state.app.darkMode);
@@ -106,6 +111,25 @@ function App() {
           </h1>
         </div>
       </div>
+    );
+  }
+
+  // Vérification de l'authentification : si non connecté, affiche Login ou Register
+  if (!isAuthenticated) {
+    return (
+      <>
+        {authMode === "login" ? (
+          <Login 
+            onLoginSuccess={() => loginUser()} 
+            onSwitchToRegister={() => setAuthMode("register")} 
+          />
+        ) : (
+          <Register 
+            onRegisterSuccess={() => setAuthMode("login")} 
+            onSwitchToLogin={() => setAuthMode("login")} 
+          />
+        )}
+      </>
     );
   }
 
