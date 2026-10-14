@@ -15,11 +15,11 @@ export default function WorkspaceNavigationBar() {
         }
         loadData()
     }, [projectName])
-    return <div className="fixed bg-couleur1 opacity-40 hover:opacity-100 dark:bg-gray-900/90 backdrop-blur-md p-1.5 px-3 gap-4 bottom-3 left-1/2 -translate-x-1/2 z-40 rounded-full border border-couleur1/10 dark:border-white/10 shadow-xl flex items-center w-11  hover:w-60 transition-all duration-500 ease-in-out group overflow-hidden">
+    return <div className="fixed bg-couleur1 opacity-100 md:opacity-45 md:hover:opacity-100 dark:bg-gray-900/90 backdrop-blur-md p-1.5 px-3 gap-2 md:gap-4 bottom-3 left-1/2 -translate-x-1/2 z-40 rounded-full border border-couleur1/10 dark:border-white/10 shadow-xl flex items-center w-auto md:w-11 md:hover:w-60 transition-all duration-500 ease-in-out group overflow-hidden">
         <h3 className="text-sm font-semibold dark:text-gray-200 flex items-center gap-4 text-couleur3 whitespace-nowrap min-w-max">
             <Navigation size={18} />
         </h3>
-        <div className="flex items-center w-full justify-around gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+        <div className="flex items-center w-full justify-around gap-1 md:gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 delay-100">
             <button
                 className="p-1.5 rounded-lg text-couleur3 hover:bg-white/10 transition-colors cursor-pointer"
                 title="Go to DashBoard"
@@ -63,7 +63,6 @@ export default function WorkspaceNavigationBar() {
                     <LayoutDashboard size={18}></LayoutDashboard>
                 </button>
             }
-
         </div>
     </div>
 }
