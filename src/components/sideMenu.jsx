@@ -177,6 +177,7 @@ export default function SideMenu() {
     e.preventDefault();
     dispatch(setToggleMenuSide());
 
+
   };
   return (
     <>
@@ -284,7 +285,11 @@ export default function SideMenu() {
                           key={sub.name}
                           className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer text-sm transition-all
                                             ${actualWindow === sub.name ? "bg-couleur1 text-couleur3" : "text-couleur1/70 hover:bg-couleur1/5 hover:text-couleur1"}`}
-                          onClick={() => navigateTo(sub.name)}
+                          onClick={() => {
+                            navigateTo(sub.name); if (window.innerWidth < 768) {
+                              dispatch(setToggleMenuSide());
+                            }
+                          }}
                         >
                           {sub.icon}
                           <span>{sub.label}</span>
@@ -301,7 +306,13 @@ export default function SideMenu() {
                           key={sub.name}
                           className={`flex items-center gap-3 p-2 px-4 rounded-lg cursor-pointer text-sm whitespace-nowrap transition-all
                                             ${actualWindow === sub.name ? "bg-couleur1 text-white" : "text-couleur1 hover:bg-couleur3"}`}
-                          onClick={() => navigateTo(sub.name)}
+                          onClick={() => {
+                            navigateTo(sub.name);
+                            if (window.innerWidth < 768) {
+                              dispatch(setToggleMenuSide());
+                            }
+                          }
+                          }
                         >
                           {sub.icon}
                           <span>{sub.label}</span>
@@ -321,7 +332,12 @@ export default function SideMenu() {
                     ? "bg-couleur1 text-couleur3 border-couleur1 shadow-sm"
                     : "border-couleur7 text-couleur1 hover:bg-opacity-10 hover:bg-couleur1 hover:text-couleur3"
                   }`}
-                onClick={() => navigateTo(item.name)}
+                onClick={() => {
+                  navigateTo(item.name)
+                  if (window.innerWidth < 768) {
+                    dispatch(setToggleMenuSide());
+                  }
+                }}
               >
                 <div className="shrink-0">{item.icon}</div>
                 <span
