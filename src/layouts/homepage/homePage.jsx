@@ -167,7 +167,6 @@ const HomePage = () => {
                                         </div>
                                     </section>
                                 )}
-
                                 {/* Static Site Overview Section */}
                                 {projectDetails.type === "static" && (
                                     <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">

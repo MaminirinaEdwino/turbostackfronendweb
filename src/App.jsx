@@ -21,9 +21,9 @@ import UnifiedEditor from "./layouts/projects/unifiedEditor";
 import HelpDocumentation from "./helpComponent";
 import { GoApp } from "./services/bridge";
 import WorkspaceNavigationBar from "./components/workspaceNavigation";
-import Login from "./Login";
-import Register from "./Register";
 import { useAuth } from "./hooks/useAuth";
+import Login from "./components/login";
+import Register from "./components/register";
 
 function App() {
   const { isAuthenticated, authMode, setAuthMode, loginUser } = useAuth();
