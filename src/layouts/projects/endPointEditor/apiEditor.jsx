@@ -185,37 +185,37 @@ export default function ApiEditor({ projectName }) {
   // const isDarkMode = useSelector((state)=>state.app.darkMode)
   return (
     <div className="flex w-screen h-screen flex-col bg-couleur3 dark:bg-gray-950 transition-colors duration-300">
-      <div className="p-3 pb-4 h-fit flex items-center justify-between fixed z-30 w-full border-b border-couleur1/10 dark:border-white/10 -top-16 hover:top-0 transition-all duration-300 ease-in-out bg-couleur3/90 dark:bg-couleur6/90 backdrop-blur-md rounded-b-2xl shadow-xl box-border group">
+      <div className="p-3 pb-4 h-fit flex items-center justify-between fixed z-30 w-full border-b border-couleur1/10 dark:border-white/10 top-0  md:-top-16 md:hover:top-0 transition-all duration-300 ease-in-out bg-couleur3/90 dark:bg-couleur6/90 backdrop-blur-md rounded-b-2xl shadow-xl box-border group">
 
-        {/* Petit indicateur visuel au survol en bas de la barre */}
-        <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-couleur1 dark:bg-gray-700 text-couleur3 dark:text-gray-200 text-[10px] px-3 py-0.5 rounded-b-md opacity-70 group-hover:opacity-0 transition-opacity pointer-events-none font-mono">
+        {/* Petit indicateur visuel au survol en bas de la barre (Desktop uniquement) */}
+        <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-couleur1 dark:bg-gray-700 text-couleur3 dark:text-gray-200 text-[10px] px-3 py-0.5 rounded-b-md opacity-70 group-hover:opacity-0 transition-opacity pointer-events-none font-mono hidden md:block">
           Hover to expand editor bar
         </div>
 
         {/* Titre & Navigation */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1 mr-2">
           <button
-            className="p-2.5 rounded-xl border border-couleur1/20 dark:border-white/20 bg-couleur5 dark:bg-gray-800 text-couleur1 dark:text-gray-100 hover:bg-couleur1/10 dark:hover:bg-gray-700 transition-all duration-200 active:scale-95 shadow-xs cursor-pointer"
+            className="p-2.5 rounded-xl border border-couleur1/20 dark:border-white/20 bg-couleur5 dark:bg-gray-800 text-couleur1 dark:text-gray-100 hover:bg-couleur1/10 dark:hover:bg-gray-700 transition-all duration-200 active:scale-95 shadow-xs cursor-pointer shrink-0"
             onClick={() => navigateTo("Dashboard")}
             title="Return to Dashboard"
           >
             <FcPrevious size={18} />
           </button>
 
-          <h1 className="text-couleur1 dark:text-gray-100 text-2xl font-bold tracking-tight flex items-center gap-2">
-            <span className="opacity-60 text-lg font-medium">API Editor :</span>
-            <span>{projectName}</span>
+          <h1 className="text-couleur1 dark:text-gray-100 text-lg md:text-2xl font-bold tracking-tight flex items-center gap-1.5 md:gap-2 truncate">
+            <span className="opacity-60 text-sm md:text-lg font-medium shrink-0">API Editor :</span>
+            <span className="truncate">{projectName}</span>
           </h1>
         </div>
 
         {/* Actions & Menu */}
-        <div className="flex items-center gap-3 relative">
+        <div className="flex items-center gap-2 md:gap-3 relative shrink-0">
           <button
-            className="flex gap-2 text-white bg-couleur1 hover:bg-couleur1/90 rounded-xl px-5 py-2.5 font-semibold transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 items-center cursor-pointer text-sm"
+            className="flex gap-2 text-white bg-couleur1 hover:bg-couleur1/90 rounded-xl px-3 md:px-5 py-2.5 font-semibold transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 items-center cursor-pointer text-sm"
             onClick={saveApi}
           >
             <Save size={18} />
-            <span>Save API</span>
+            <span className="hidden sm:inline">Save API</span>
           </button>
 
           <div className="relative">
