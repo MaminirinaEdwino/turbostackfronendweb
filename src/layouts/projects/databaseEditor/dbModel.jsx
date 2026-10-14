@@ -5,7 +5,7 @@ export default function DbModel({ data }) {
   const handleOnclick = () => {};
   return (
     <div
-      className="border border-couleur1 rounded-lg overflow-hidden relative bg-white min-w-50 dark:border-none"
+      className="border-2 border-couleur1 rounded-lg overflow-hidden relative bg-white min-w-50 dark:border-none"
       onClick={handleOnclick}
     >
       {/* Points de connexion pour les relations */}
@@ -21,7 +21,7 @@ export default function DbModel({ data }) {
       />
 
       <div className="border-b border-couleur6  p-2 bg-couleur3 flex justify-between items-center dark:bg-couleur1">
-        <span className="font-medium dark:text-white/50">{data.nom}</span>
+        <span className="font-medium dark:text-white/50 text-couleur1">{data.nom}</span>
         <div className="flex gap-2">
           <button
             className="cursor-pointer text-blue-500 hover:text-blue-700 p-1 rounded transition-colors"
