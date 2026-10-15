@@ -10,10 +10,12 @@ import Toast from "../../../components/toast";
 import PageList from "./components/pageList";
 import RightSideBar from "./components/rightSideBar";
 import LeftSideBar from "./components/leftSideBar";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 
 export default function PageEditor({ projectName }) {
   const [subscription, setSubscription] = useState(null)
+  const [componentToDelete, setComponentToDelete] = useState(null);
+  const [pageToDelete, setPageToDelete] = useState(null);
   const navigateTo = useNavigate();
   const [project, setProject] = useState(null);
   const [selectedPageIndex, setSelectedPageIndex] = useState(null);
@@ -263,12 +265,16 @@ export default function PageEditor({ projectName }) {
   };
 
   const removePage = (index) => {
-    if (!window.confirm("Voulez-vous vraiment supprimer cette page ?")) return;
+    setPageToDelete(index)
+  };
+  const confimDeletePage = () => {
+    if (pageToDelete == null) return;
     setProject((prev) => {
       const typeKey = prev.type === "static" ? "site_statique" : "web_app";
-      const updatedPages = prev[typeKey].pages.filter((_, i) => i !== index);
+      const updatedPages = prev[typeKey].pages.filter((_, i) => i !== pageToDelete);
       return { ...prev, [typeKey]: { ...prev[typeKey], pages: updatedPages } };
     });
+    setPageToDelete(null)
   };
 
   const addComponent = () => {
@@ -300,9 +306,34 @@ export default function PageEditor({ projectName }) {
     });
   };
 
+  // const removeComponent = (index) => {
+  //   if (!window.confirm("Voulez-vous vraiment supprimer ce composant ?"))
+  //     return;
+  //   setProject((prev) => {
+  //     if (!prev) return prev;
+  //     const typeKey = prev.type === "static" ? "site_statique" : "web_app";
+  //     const actualCompKey = prev[typeKey]?.composants
+  //       ? "composants"
+  //       : "composant";
+  //     const updatedComponents = prev[typeKey][actualCompKey].filter(
+  //       (_, i) => i !== index,
+  //     );
+  //     return {
+  //       ...prev,
+  //       [typeKey]: { ...prev[typeKey], [actualCompKey]: updatedComponents },
+  //     };
+  //   });
+  // };
+  // 1. Ouvre le modal de confirmation
   const removeComponent = (index) => {
-    if (!window.confirm("Voulez-vous vraiment supprimer ce composant ?"))
-      return;
+    setComponentToDelete(index);
+  };
+
+  // 2. Exécute la suppression réelle lorsque l'utilisateur confirme
+  const confirmDeleteComponent = () => {
+    if (componentToDelete === null) return;
+
+    const index = componentToDelete;
     setProject((prev) => {
       if (!prev) return prev;
       const typeKey = prev.type === "static" ? "site_statique" : "web_app";
@@ -310,13 +341,63 @@ export default function PageEditor({ projectName }) {
         ? "composants"
         : "composant";
       const updatedComponents = prev[typeKey][actualCompKey].filter(
-        (_, i) => i !== index,
+        (_, i) => i !== index
       );
       return {
         ...prev,
         [typeKey]: { ...prev[typeKey], [actualCompKey]: updatedComponents },
       };
     });
+
+    // Réinitialise l'état
+    setComponentToDelete(null);
+  };
+  const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
+    if (!isOpen) return null;
+
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
+        {/* Backdrop de fermeture */}
+        <div className="fixed inset-0" onClick={onClose} />
+
+        {/* Carte du Modal */}
+        <div className="relative bg-white dark:bg-gray-900 border border-couleur1/10 dark:border-white/10 p-5 md:p-6 rounded-2xl shadow-2xl max-w-sm w-full z-10 flex flex-col gap-4 animate-in zoom-in-95 duration-200">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-rose-50 dark:bg-rose-950/50 text-rose-500 rounded-xl shrink-0">
+              <Trash2 size={22} />
+            </div>
+            <div>
+              <h4 className="text-base md:text-lg font-bold text-gray-900 dark:text-gray-100">
+                {title || "Confirm Suppression"}
+              </h4>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Action irréversible</p>
+            </div>
+          </div>
+
+          <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+            {message || "Voulez-vous vraiment supprimer ce composant ?"}
+          </p>
+
+          {/* Boutons d'action */}
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-xs md:text-sm font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+            >
+              Annuler
+            </button>
+            <button
+              type="button"
+              onClick={onConfirm}
+              className="px-4 py-2 text-xs md:text-sm font-semibold bg-rose-500 hover:bg-rose-600 text-white rounded-xl shadow-md transition-all active:scale-95 cursor-pointer"
+            >
+              Supprimer
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const handleSave = async () => {
@@ -381,7 +462,7 @@ export default function PageEditor({ projectName }) {
       {/* Header Commun */}
       <Header activeItem={activeItem} editMode={editMode} editingType={editingType} handleSave={handleSave} navigateTo={navigateTo} project={project} projectName={projectName} setEditMode={setEditMode} updateActiveItemField={updateActiveItemField} />
       <DarkModeToggle></DarkModeToggle>
-      
+
       {/* Vue Conditionnelle */}
       <div className="flex-1 overflow-y-auto p-3 md:p-8">
         {editMode ? (
@@ -444,6 +525,22 @@ export default function PageEditor({ projectName }) {
           <PageList addComponent={addComponent} addPage={addPage} compKey={compKey} project={project} removeComponent={removeComponent} removePage={removePage} setEditMode={setEditMode} setEditingType={setEditingType} setSelectedComponentIndex={setSelectedComponentIndex} setSelectedPageIndex={setSelectedPageIndex} siteData={siteData} />
         )}
       </div>
+
+      {/* Modal de Confirmation de Suppression de Composant */}
+      <DeleteConfirmModal
+        isOpen={componentToDelete !== null}
+        onClose={() => setComponentToDelete(null)}
+        onConfirm={confirmDeleteComponent}
+        title="Remove Component"
+        message="Voulez-vous vraiment supprimer ce composant ? Cette action retirera le composant de votre projet."
+      />
+      <DeleteConfirmModal
+        isOpen={pageToDelete !== null}
+        onClose={() => setPageToDelete(null)}
+        onConfirm={confimDeletePage}
+        title="Remove Page"
+        message="Voulez-vous vraiment supprimer ce composant ? Cette action retirera le composant de votre projet."
+      />
 
       {/* Toast Notification */}
       {toast && (
