@@ -25,6 +25,7 @@ import { setToggleDarkMode, setToggleMenuSide } from "../appSlice";
 import logo from "../assets/logotransparent.png";
 import { GoApp } from "../services/bridge";
 import { useEffect } from "react";
+import  DarkModeToggle  from "./darkModeToggle";
 export default function SideMenu() {
   const navigateTo = useNavigate();
   const dispatch = useDispatch();
@@ -181,25 +182,18 @@ export default function SideMenu() {
   };
   return (
     <>
-      <button
-        onClick={() => dispatch(setToggleDarkMode())}
-        className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all border-couleur7 text-couleur1 hover:bg-couleur1 hover:text-white justify-start fixed w-fit bottom-0 right-0 z-10 dark:bg-couleur1 dark:text-white dark:border-none hover:right-2 ease-in-out "
-      >
-        <div className="shrink-0">
-          {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-        </div>
-      </button>
+      <DarkModeToggle></DarkModeToggle>
       {
         !toggleMenu && <button
           onClick={handleToggleMenu}
-          className="md:hidden p-2.5 rounded-xl bg-couleur1 text-white shadow-md fixed top-3 left-3 z-50 flex items-center justify-center cursor-pointer"
+          className="md:hidden p-2.5 rounded-xl bg-couleur1 text-white shadow-md fixed top-3 right-3 z-50 flex items-center justify-center cursor-pointer"
           aria-label="Menu"
         >
           <Menu size={22} />
         </button>
       }
       <aside
-        className={`flex flex-col p-2 dark:bg-gray-950 transition-all duration-300 ease-in-out border-r border-couleur1/10 dark:border-white/10 
+        className={`flex flex-col p-2 dark:bg-gray-950 transition-all duration-300 ease-in-out border-r border-couleur1/10 dark:border-white/10 bg-couleur3
     /* Adaptations mobiles (sur petits écrans) */
     fixed inset-y-0 left-0 z-40 md:relative
     ${toggleMenu ? "w-64 md:w-56" : "w-0 md:w-15 overflow-hidden md:overflow-visible"} 
