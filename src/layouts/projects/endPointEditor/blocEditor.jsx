@@ -503,26 +503,26 @@ export function FlowCanvas({ setProjet, endpoint, project, setToggleVisualScript
 
 
   return (
-    <div
+   <div
       style={{
         width: "100%",
         height: "100vh",
         display: "flex",
         flexDirection: "column",
       }}
-
     >
-      <div className="fixed top-4 right-4 z-50 flex items-center gap-2.5 p-1.5 rounded-2xl bg-white/70 dark:bg-gray-900/80 border border-slate-200/50 dark:border-slate-800/60 shadow-xl shadow-black/10 backdrop-blur-md transition-all">
+      {/* Header d'actions : Sauvegarder & Fermer */}
+      <div className="fixed top-20 right-2 md:top-4 md:right-4 z-50 flex items-center gap-1.5 md:gap-2.5 p-1 md:p-1.5 rounded-2xl bg-white/80 dark:bg-gray-900/90 border border-slate-200/50 dark:border-slate-800/60 shadow-xl shadow-black/10 backdrop-blur-md transition-all ">
         {/* Bouton Sauvegarder */}
         <button
           onClick={handleSave}
-          className="px-3.5 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 flex items-center gap-1.5 cursor-pointer text-couleur1 dark:text-couleur2 bg-white dark:bg-couleur1 border border-transparent hover:border-couleur2 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
+          className="px-2.5 py-1.5 md:px-3.5 md:py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 flex items-center gap-1 md:gap-1.5 cursor-pointer text-couleur1 dark:text-couleur2 bg-white dark:bg-couleur1 border border-transparent hover:border-couleur2 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
         >
           <Save size={14} className="transition-transform duration-200 group-hover:scale-110" />
           <span>Save</span>
         </button>
 
-        {/* Separateur visuel subtil */}
+        {/* Séparateur visuel */}
         <div className="h-4 w-px bg-slate-300/50 dark:bg-slate-700/50" />
 
         {/* Bouton Fermer */}
@@ -530,36 +530,49 @@ export function FlowCanvas({ setProjet, endpoint, project, setToggleVisualScript
           onClick={() => {
             setToggleVisualScriptModal("none");
           }}
-          className="group px-3.5 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 flex items-center gap-1.5 cursor-pointer text-couleur1 dark:text-couleur2 bg-white dark:bg-couleur1 border border-transparent hover:border-red-500/50 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-500/5 dark:hover:bg-red-500/10 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
+          className="group px-2.5 py-1.5 md:px-3.5 md:py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 flex items-center gap-1 md:gap-1.5 cursor-pointer text-couleur1 dark:text-couleur2 bg-white dark:bg-couleur1 border border-transparent hover:border-red-500/50 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-500/5 dark:hover:bg-red-500/10 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
         >
           <Plus size={15} className="rotate-45 transition-transform duration-200 group-hover:rotate-185" />
           <span>Close</span>
         </button>
       </div>
-      <div className="flex flex-1 overflow-hidden " >
-        {/* BARRE LATÉRALE D'INSTRUCTIONS D'API */}
-        {!openTab && <button
-          onClick={() => setOpenTab(true)}
-          title="Open side panel"
-          className="group fixed left-0 -translate-x-3 hover:translate-x-0 transition-transform duration-200 ease-out z-50 top-10 flex items-center gap-2 pl-4 pr-3 py-2.5 rounded-r-xl shadow-xl shadow-black/10 bg-white dark:bg-couleur1 text-couleur1 dark:text-couleur2 border border-l-0 border-slate-200/60 dark:border-slate-800/60 backdrop-blur-md cursor-pointer hover:border-couleur2"
-        >
-          <PanelLeft className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
 
-          {/* Indicateur visuel d'ouverture subtil au survol */}
-          <span className="text-xs font-semibold max-w-0 opacity-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs group-hover:opacity-100 transition-all duration-200 ease-out">
-            Panel
-          </span>
-        </button>}
+      <div className="flex flex-1 overflow-hidden relative ">
+        {/* BARRE LATÉRALE D'INSTRUCTIONS D'API */}
+        {!openTab && (
+          <button
+            onClick={() => setOpenTab(true)}
+            title="Open side panel"
+            className="group fixed left-0  -translate-x-2 md:-translate-x-3 hover:translate-x-0 transition-transform duration-200 ease-out z-50 top-20  md:top-10 flex items-center gap-2 pl-3.5 pr-2.5 md:pl-4 md:pr-3 py-2 md:py-2.5 rounded-r-xl shadow-xl shadow-black/10 bg-white dark:bg-couleur1 text-couleur1 dark:text-couleur2 border border-l-0 border-slate-200/60 dark:border-slate-800/60 backdrop-blur-md cursor-pointer hover:border-couleur2"
+          >
+            <PanelLeft className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
+
+            {/* Indicateur visuel d'ouverture au survol */}
+            <span className="text-xs font-semibold max-w-0 opacity-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs group-hover:opacity-100 transition-all duration-200 ease-out">
+              Panel
+            </span>
+          </button>
+        )}
+
+        {/* Overlay d'arrière-plan pour fermer le panneau sur mobile */}
+        {openTab && (
+          <div
+            className="fixed inset-0 bg-black/30 backdrop-blur-xs z-30 md:hidden"
+            onClick={() => setOpenTab(false)}
+          />
+        )}
+
         <div
           style={{ scrollbarWidth: "none" }}
-          className={`fixed top-0 bottom-0 z-40 w-64 h-screen flex flex-col gap-3 p-3 bg-white/80 dark:bg-gray-900/90 backdrop-blur-2xl border-r border-couleur2/40 shadow-2xl overflow-y-auto transition-all duration-300 ease-out scrollbar-none ${openTab ? "left-0" : "-left-64"
-            }`}
+          className={`fixed top-0 bottom-0 z-40 w-[85vw] max-w-64 h-screen flex flex-col gap-3 p-3 bg-white/90 dark:bg-gray-900/95 backdrop-blur-2xl border-r border-couleur2/40 shadow-2xl overflow-y-auto transition-all duration-300 ease-out scrollbar-none ${
+            openTab ? "left-0" : "-left-full md:-left-64"
+          }`}
         >
           {/* En-tête du Panneau */}
           <div className="flex items-center justify-between px-2 pt-2 pb-3 border-b border-gray-200/50 dark:border-gray-800/60">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-couleur2 animate-pulse" />
-              <h4 className="text-couleur1 text-base font-bold tracking-wide">
+              <h4 className="text-couleur1 dark:text-gray-100 text-base font-bold tracking-wide">
                 Base Blocks
               </h4>
             </div>
@@ -663,11 +676,11 @@ export function FlowCanvas({ setProjet, endpoint, project, setToggleVisualScript
             </div>
           )}
         </div>
-        {toast && (
-          <Toast toast={toast}></Toast>
-        )}
+
+        {toast && <Toast toast={toast} />}
+
         {/* CANVAS DE VISUAL SCRIPTING */}
-        <div className="bg-couleur3 " style={{ flex: 1, position: "relative" }}>
+        <div className="bg-couleur3" style={{ flex: 1, position: "relative" }}>
           <ReactFlow
             nodes={nodes}
             edges={edges}
