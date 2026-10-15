@@ -377,14 +377,15 @@ export default function PageEditor({ projectName }) {
     );
 
   return (
-    <div className="flex w-screen h-screen flex-col bg-couleur3 dark:bg-gray-950">
+    <div className="flex w-full h-screen flex-col bg-couleur3 dark:bg-gray-950 overflow-x-hidden">
       {/* Header Commun */}
       <Header activeItem={activeItem} editMode={editMode} editingType={editingType} handleSave={handleSave} navigateTo={navigateTo} project={project} projectName={projectName} setEditMode={setEditMode} updateActiveItemField={updateActiveItemField} />
       <DarkModeToggle></DarkModeToggle>
+      
       {/* Vue Conditionnelle */}
-      <div className="flex-1 overflow-y-auto p-8">
+      <div className="flex-1 overflow-y-auto p-3 md:p-8">
         {editMode ? (
-          <div className="flex h-full min-h-150 ">
+          <div className="flex flex-col md:flex-row h-full min-h-0 md:min-h-150 relative">
             {/* Left Sidebar: Structure & Blocks */}
             <LeftSideBar
               activeBlock={activeBlock}
@@ -419,7 +420,6 @@ export default function PageEditor({ projectName }) {
               zoomLevel={zoomLevel}
               viewport={viewport}
             />
-
 
             {/* Right Sidebar: Properties & Global */}
             <RightSideBar
