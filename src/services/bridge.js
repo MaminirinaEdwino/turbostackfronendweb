@@ -1,3 +1,5 @@
+
+
 const API_BASE = `http://192.168.1.118:8080/api`;
 
 const getHeaders = () => {
@@ -41,6 +43,7 @@ export const GoApp = {
 
     logout: () => {
         localStorage.removeItem("turbostack_token");
+        window.location.reload()
     },
     getStats: async () => {
         try {

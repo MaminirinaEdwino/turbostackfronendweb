@@ -17,6 +17,7 @@ import {
   SendToBack,
   ImageIcon,
   Menu,
+  LogOut,
 } from "lucide-react";
 import { useNavigate } from "../hooks/useNavigate";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,14 +26,13 @@ import { setToggleDarkMode, setToggleMenuSide } from "../appSlice";
 import logo from "../assets/logotransparent.png";
 import { GoApp } from "../services/bridge";
 import { useEffect } from "react";
-import  DarkModeToggle  from "./darkModeToggle";
+import DarkModeToggle from "./darkModeToggle";
 export default function SideMenu() {
   const navigateTo = useNavigate();
   const dispatch = useDispatch();
   const toggleMenu = useSelector((state) => state.app.toggleMenuSide);
   const actualWindow = useSelector((state) => state.app.actualWindow);
   const actualProject = useSelector((state) => state.app.actualProject);
-  const isDarkMode = useSelector((state) => state.app.darkMode);
   const [editorExpanded, setEditorExpanded] = useState(false);
   const [subItems, setSubItems] = useState([
     // {
@@ -342,6 +342,11 @@ export default function SideMenu() {
               </div>
             );
           })}
+          
+          <button className="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all overflow-hidden whitespace-nowrap w-full bg-couleur1 text-couleur3 border-couleur1 shadow-sm" onClick={()=>{
+            GoApp.logout()
+            navigateTo("login")
+          }}><LogOut size={14}/> LogOut </button>
         </nav>
         {/* Bouton Hamburger visible uniquement sur mobile */}
 

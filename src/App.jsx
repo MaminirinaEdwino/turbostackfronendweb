@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import HomePage from "./layouts/homepage/homePage";
 import ProjectList from "./layouts/projects/projectList";
 import ComponentsList from "./layouts/componantList/componantList";
@@ -24,6 +24,7 @@ import WorkspaceNavigationBar from "./components/workspaceNavigation";
 import { useAuth } from "./hooks/useAuth";
 import Login from "./components/login";
 import Register from "./components/register";
+import { setActualWindow } from "./appSlice";
 
 function App() {
   const { isAuthenticated, authMode, setAuthMode, loginUser } = useAuth();
@@ -31,6 +32,7 @@ function App() {
   const actualProject = useSelector((state) => state.app.actualProject);
   const isDarkMode = useSelector((state) => state.app.darkMode);
   const [isAppReady, setIsAppReady] = useState(false);
+  const dispatch = useDispatch()
   const windowList = [
     "api_editor",
     "page_editor",
@@ -96,6 +98,25 @@ function App() {
         return <FileExplorer projectName={actualProject}></FileExplorer>;
       case "unified_editor":
         return <UnifiedEditor projectName={actualProject}></UnifiedEditor>;
+      case ("login"):
+        if (isAuthenticated) {
+          dispatch(setActualWindow("DashBoard"))
+        }
+        return (
+          <>
+            {authMode === "login" ? (
+              <Login
+                onLoginSuccess={() => loginUser()}
+                onSwitchToRegister={() => setAuthMode("register")}
+              />
+            ) : (
+              <Register
+                onRegisterSuccess={() => setAuthMode("login")}
+                onSwitchToLogin={() => setAuthMode("login")}
+              />
+            )}
+          </>
+        );
       default:
         return <HomePage />; // Fallback
     }
@@ -119,14 +140,14 @@ function App() {
     return (
       <>
         {authMode === "login" ? (
-          <Login 
-            onLoginSuccess={() => loginUser()} 
-            onSwitchToRegister={() => setAuthMode("register")} 
+          <Login
+            onLoginSuccess={() => loginUser()}
+            onSwitchToRegister={() => setAuthMode("register")}
           />
         ) : (
-          <Register 
-            onRegisterSuccess={() => setAuthMode("login")} 
-            onSwitchToLogin={() => setAuthMode("login")} 
+          <Register
+            onRegisterSuccess={() => setAuthMode("login")}
+            onSwitchToLogin={() => setAuthMode("login")}
           />
         )}
       </>
@@ -139,7 +160,7 @@ function App() {
         onClick={() => setIsDocOpen(true)}
         className="px-4 z-50 py-2 bg-couleur1 text-white rounded-lg fixed right-2 bottom-35"
       >
-        ?
+        ? {isAuthenticated}
       </button>
 
       {/* Le composant Documentation qui s'affiche par-dessus l'interface */}
