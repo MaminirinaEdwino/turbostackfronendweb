@@ -50,16 +50,16 @@ export default function ProjectList() {
   );
 
   return (
-    <div className="flex h-screen w-full font-san bg-couleur3 dark:bg-gray-950 transition-colors duration-300">
+    <div className="flex h-screen w-full font-san bg-couleur3 dark:bg-gray-950 transition-colors duration-300 overflow-hidden">
       <SideMenu />
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 md:mb-10 gap-4 md:gap-6">
           <div>
-            <h1 className="text-4xl font-bold text-couleur1 mb-2 dark:text-couleur3/80">
+            <h1 className="text-2xl md:text-4xl font-bold text-couleur1 mb-1 md:mb-2 dark:text-couleur3/80">
               Projects
             </h1>
-            <p className="text-couleur1 opacity-60 max-w-md dark:text-couleur3/80">
+            <p className="text-xs md:text-sm text-couleur1 opacity-60 max-w-md dark:text-couleur3/80">
               Browse and manage all your project stacks, APIs and database
               models.
             </p>
@@ -74,7 +74,7 @@ export default function ProjectList() {
         </div>
 
         {/* Project Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
           {filteredProjects.map((name, index) => (
             <ProjectCard
               key={index + name}
@@ -89,13 +89,13 @@ export default function ProjectList() {
           {filteredProjects.length === 0 && !searchTerm && (
             <div
               onClick={() => dispatch(setActualWindow("New Project"))}
-              className="group flex flex-col items-center justify-center border-2 border-dashed border-couleur1/20 rounded-2xl p-10 cursor-pointer hover:border-couleur1/50 hover:bg-white transition-all"
+              className="group flex flex-col items-center justify-center border-2 border-dashed border-couleur1/20 rounded-2xl p-6 md:p-10 cursor-pointer hover:border-couleur1/50 hover:bg-white transition-all"
             >
               <Plus
-                size={40}
-                className="text-couleur1 opacity-20 group-hover:opacity-100 group-hover:scale-110 transition-all mb-4"
+                size={32}
+                className="text-couleur1 opacity-20 group-hover:opacity-100 group-hover:scale-110 transition-all mb-2 md:mb-4 md:size-10"
               />
-              <span className="text-sm font-bold text-couleur1 opacity-40">
+              <span className="text-xs md:text-sm font-bold text-couleur1 opacity-40">
                 Create your first project
               </span>
             </div>
@@ -103,9 +103,9 @@ export default function ProjectList() {
         </div>
 
         {filteredProjects.length === 0 && searchTerm && (
-          <div className="flex flex-col items-center justify-center py-24 text-couleur1 opacity-40">
-            <Search size={48} className="mb-4" />
-            <p className="text-lg italic">
+          <div className="flex flex-col items-center justify-center py-12 md:py-24 text-couleur1 opacity-40 text-center">
+            <Search size={36} className="mb-3 md:size-12 md:mb-4" />
+            <p className="text-sm md:text-lg italic">
               No projects found matching "{searchTerm}"
             </p>
           </div>
