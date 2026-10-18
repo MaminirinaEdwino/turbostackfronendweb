@@ -1,6 +1,6 @@
 
 
-const API_BASE = `http://192.168.1.118:8080/api`;
+const API_BASE = `http://localhost:8080/api`;
 
 const getHeaders = () => {
     const token = localStorage.getItem("turbostack_token") || "";
@@ -206,15 +206,27 @@ export const GoApp = {
     },
 
     loadPageLibrairie: async () => {
-        return [];
+        const res = await fetch(`${API_BASE}/librairie/page`, {
+            headers: getHeaders()
+        });
+        if (!res.ok) return [];
+        return await res.json();
     },
 
     loadCompLib: async () => {
-        return [];
+        const res = await fetch(`${API_BASE}/librairie/component`, {
+            headers: getHeaders()
+        });
+        if (!res.ok) return [];
+        return await res.json();
     },
 
     loadStyleLib: async () => {
-        return [];
+        const res = await fetch(`${API_BASE}/librairie/style`, {
+            headers: getHeaders()
+        });
+        if (!res.ok) return [];
+        return await res.json();
     },
 
     getProjectType: async (projectName) => {
