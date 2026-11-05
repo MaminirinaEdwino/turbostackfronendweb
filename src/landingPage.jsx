@@ -1,49 +1,119 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Sparkles, ArrowRight, CheckCircle2, Zap, Layers, Code2, ShieldCheck, Terminal, Cpu } from 'lucide-react';
 
 export default function LandingPage() {
+  const canvasRef = useRef(null);
+
+  // Animation interactive de la grille au passage de la souris
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    let animationFrameId;
+    const gridSize = 36; // Taille de chaque case de la grille
+    let mouse = { x: -1000, y: -1000 };
+
+    const handleMouseMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    };
+
+    const handleMouseLeave = () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    };
+
+    const resizeCanvas = () => {
+      canvas.width = canvas.parentElement.offsetWidth;
+      canvas.height = canvas.parentElement.offsetHeight;
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseleave', handleMouseLeave);
+
+    const render = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const cols = Math.ceil(canvas.width / gridSize);
+      const rows = Math.ceil(canvas.height / gridSize);
+      const radius = 180; // Rayon d'impact autour du curseur
+
+      for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+          const cellX = i * gridSize;
+          const cellY = j * gridSize;
+          const centerX = cellX + gridSize / 2;
+          const centerY = cellY + gridSize / 2;
+
+          // Distance entre le centre de la case et le curseur
+          const dist = Math.hypot(centerX - mouse.x, centerY - mouse.y);
+
+          if (dist < radius) {
+            // Calcul de l'intensité en fonction de la proximité du curseur
+            const intensity = 1 - dist / radius;
+
+            // Remplissage de la case illuminée
+            ctx.fillStyle = `rgba(54, 143, 139, ${intensity * 0.25})`;
+            ctx.fillRect(cellX + 1, cellY + 1, gridSize - 2, gridSize - 2);
+
+            // Contour réactif plus intense
+            ctx.strokeStyle = `rgba(54, 143, 139, ${intensity * 0.6})`;
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(cellX + 0.5, cellY + 0.5, gridSize - 1, gridSize - 1);
+          }
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#f7f7f7] text-slate-800 font-sans selection:bg-[#368f8b]/20 selection:text-[#368f8b] relative overflow-hidden">
       
       {/* ------------------------------------------------------------- */}
-      {/* EFFETS DE FOND, GRILLE STUDIO ET FORMES GÉOMÉTRIQUES          */}
+      {/* EFFETS DE FOND, GRILLE INTERACTIVE ET BLOBS                   */}
       {/* ------------------------------------------------------------- */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         
-        {/* GRILLE DE LABORATOIRE / STUDIO (GRID PATTERN) */}
+        {/* GRILLE STATIQUE DE BASE (GRID PATTERN) */}
         <div 
-          className="absolute inset-0 opacity-[0.07]" 
+          className="absolute inset-0 opacity-[0.06]" 
           style={{
             backgroundImage: `
               linear-gradient(to right, #3b3b58 1px, transparent 1px),
               linear-gradient(to bottom, #3b3b58 1px, transparent 1px)
             `,
-            backgroundSize: '32px 32px',
-            maskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
-            WebkitMaskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)'
+            backgroundSize: '36px 36px',
           }}
         />
 
-        {/* Lignes de repères de studio (Axe central fin) */}
+        {/* CANVAS POUR L'ANIMATION INTERACTIVE DE LA GRILLE AU CURSEUR */}
+        <canvas 
+          ref={canvasRef} 
+          className="absolute inset-0 z-0 pointer-events-none"
+        />
+
+        {/* Lignes d'axes d'ingénierie */}
         <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-[#368f8b]/10" />
         <div className="absolute left-0 right-0 top-1/3 h-[1px] bg-[#368f8b]/10" />
 
-        {/* Blob Émeraude Haut Gauche */}
+        {/* Blobs de couleurs en arrière-plan */}
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#368f8b]/15 rounded-full blur-3xl" />
-        
-        {/* Forme SVG Organique Droite */}
-        <svg className="absolute top-12 -right-16 w-[500px] h-[500px] opacity-15 fill-[#368f8b]/30" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <path d="M44.7,-59.1C57.4,-48.9,66.8,-34.5,70.3,-19.1C73.8,-3.7,71.4,12.7,64.2,26.8C57,40.9,45,52.7,30.8,60.5C16.6,68.3,0.2,72,-16.9,69.5C-34,67,-51.8,58.3,-62.7,44.1C-73.6,29.9,-77.6,10.2,-74.6,-8.2C-71.6,-26.6,-61.6,-43.7,-47.4,-54.2C-33.2,-64.7,-16.6,-68.6,0.3,-69.1C17.2,-69.6,32,-69.3,44.7,-59.1Z" transform="translate(100 100)" />
-        </svg>
-
-        {/* Blob Slate Blue Milieu Gauche */}
         <div className="absolute top-[45%] -left-32 w-[450px] h-[450px] bg-[#3b3b58]/10 rounded-full blur-3xl" />
-        
-        {/* Anneau Géométrique Translucide */}
-        <div className="absolute top-[60%] right-10 w-80 h-80 border-4 border-[#368f8b]/10 rounded-full" />
-        <div className="absolute top-[62%] right-16 w-64 h-64 border-2 border-dashed border-[#3b3b58]/10 rounded-full" />
-
-        {/* Blob Émeraude Bas Droit */}
         <div className="absolute bottom-10 right-0 w-[500px] h-[500px] bg-emerald-400/10 rounded-full blur-3xl" />
       </div>
 
@@ -92,7 +162,6 @@ export default function LandingPage() {
                   CSS
                 </div>
 
-                {/* Badge Flottant */}
                 <div className="absolute right-4 bottom-4 bg-[#3b3b58] text-white p-3 rounded-xl shadow-lg flex items-center gap-2 text-xs font-medium border border-white/10">
                   <Code2 size={16} className="text-emerald-400" />
                   <span>Zero Heavy Frameworks</span>
@@ -128,7 +197,6 @@ export default function LandingPage() {
       {/* 3. SECTION ABOUT TURBOSTACK */}
       <section id="about" className="relative z-10 py-20 max-w-6xl mx-auto px-6">
         
-        {/* Titre avec fond dégradé subtil */}
         <div className="relative mb-16 text-center">
           <div className="inline-block px-8 py-3 bg-gradient-to-r from-[#368f8b]/10 via-[#368f8b]/20 to-[#368f8b]/10 border border-[#368f8b]/30 rounded-2xl backdrop-blur-xs shadow-xs">
             <h2 className="text-2xl font-bold text-[#3b3b58] tracking-tight">About TurboStack</h2>
@@ -136,7 +204,6 @@ export default function LandingPage() {
         </div>
 
         <div className="space-y-16">
-          {/* Bloc 1 : Image à gauche / Texte à droite */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="bg-white/80 backdrop-blur-sm border border-slate-200/80 rounded-2xl p-6 h-64 flex items-center justify-center shadow-md hover:shadow-lg transition-shadow relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-[#368f8b]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -154,7 +221,6 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Bloc 2 : Texte à gauche / Image à droite */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="order-2 md:order-1 space-y-4">
               <h3 className="text-xl font-bold text-[#3b3b58]">Built for Modern Developers</h3>
@@ -183,7 +249,6 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Cartes Tarifs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
           
           {/* Carte 1 : Développeur Solo */}
@@ -213,7 +278,7 @@ export default function LandingPage() {
             </button>
           </div>
 
-          {/* Carte 2 : Créateur Web (Mise en avant) */}
+          {/* Carte 2 : Créateur Web */}
           <div className="bg-white border-2 border-[#368f8b] rounded-3xl p-8 shadow-2xl shadow-[#368f8b]/15 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 relative">
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#368f8b] text-white text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full shadow-md">
               Most Popular
