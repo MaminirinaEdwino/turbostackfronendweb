@@ -27,6 +27,7 @@ import Register from "./components/register";
 import { setActualWindow } from "./appSlice";
 import { createBrowserRouter, RouterProvider, useLocation } from "react-router-dom"
 import LandingPage from "./landingPage";
+import DownloadApp from "./download";
 
 function App() {
   const { isAuthenticated, authMode, setAuthMode, loginUser } = useAuth();
@@ -164,6 +165,9 @@ function App() {
     {
       path: "/",
       element: <LandingPage />
+    }, {
+      path: "/download",
+      element: <DownloadApp />
     },
     {
       path: "/editor",
