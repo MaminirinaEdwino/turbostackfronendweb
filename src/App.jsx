@@ -25,6 +25,8 @@ import { useAuth } from "./hooks/useAuth";
 import Login from "./components/login";
 import Register from "./components/register";
 import { setActualWindow } from "./appSlice";
+import { createBrowserRouter, RouterProvider, useLocation } from "react-router-dom"
+import LandingPage from "./landingPage";
 
 function App() {
   const { isAuthenticated, authMode, setAuthMode, loginUser } = useAuth();
@@ -33,6 +35,8 @@ function App() {
   const isDarkMode = useSelector((state) => state.app.darkMode);
   const [isAppReady, setIsAppReady] = useState(false);
   const dispatch = useDispatch()
+  const [isDocOpen, setIsDocOpen] = useState(false);
+
   const windowList = [
     "api_editor",
     "page_editor",
@@ -40,6 +44,8 @@ function App() {
     "Files",
     "Export"
   ]
+
+
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
@@ -121,58 +127,93 @@ function App() {
         return <HomePage />; // Fallback
     }
   };
-  const [isDocOpen, setIsDocOpen] = useState(false);
-  if (!isAppReady) {
-    return (
-      <div className="flex h-screen w-screen flex-col items-center justify-center bg-couleur3 dark:bg-gray-950 transition-colors duration-300">
-        <div className="flex flex-col items-center gap-4">
-          <img src={logo} alt="" />
-          <h1 className="text-xl font-black text-couleur1 tracking-[0.2em] uppercase animate-pulse">
-            TurboStack
-          </h1>
-        </div>
-      </div>
-    );
-  }
+
+  // if (!isAppReady) {
+  //   return (
+  //     <div className="flex h-screen w-screen flex-col items-center justify-center bg-couleur3 dark:bg-gray-950 transition-colors duration-300">
+  //       <div className="flex flex-col items-center gap-4">
+  //         <img src={logo} alt="" />
+  //         <h1 className="text-xl font-black text-couleur1 tracking-[0.2em] uppercase animate-pulse">
+  //           TurboStack
+  //         </h1>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   // Vérification de l'authentification : si non connecté, affiche Login ou Register
-  if (!isAuthenticated) {
-    return (
-      <>
-        {authMode === "login" ? (
-          <Login
-            onLoginSuccess={() => loginUser()}
-            onSwitchToRegister={() => setAuthMode("register")}
-          />
-        ) : (
-          <Register
-            onRegisterSuccess={() => setAuthMode("login")}
-            onSwitchToLogin={() => setAuthMode("login")}
-          />
-        )}
+  // if (!isAuthenticated) {
+  //   return (
+  //     <>
+  //       {authMode === "login" ? (
+  //         <Login
+  //           onLoginSuccess={() => loginUser()}
+  //           onSwitchToRegister={() => setAuthMode("register")}
+  //         />
+  //       ) : (
+  //         <Register
+  //           onRegisterSuccess={() => setAuthMode("login")}
+  //           onSwitchToLogin={() => setAuthMode("login")}
+  //         />
+  //       )}
+  //     </>
+  //   );
+  // }
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <LandingPage />
+    },
+    {
+      path: "/editor",
+      element: <>
+        {!isAuthenticated ? <>
+          {authMode === "login" ? (
+            <Login
+              onLoginSuccess={() => loginUser()}
+              onSwitchToRegister={() => setAuthMode("register")}
+            />
+          ) : (
+            <Register
+              onRegisterSuccess={() => setAuthMode("login")}
+              onSwitchToLogin={() => setAuthMode("login")}
+            />
+          )}
+        </> : <>
+          {!isAppReady ? <div className="flex h-screen w-screen flex-col items-center justify-center bg-couleur3 dark:bg-gray-950 transition-colors duration-300">
+            <div className="flex flex-col items-center gap-4">
+              <img src={logo} alt="" />
+              <h1 className="text-xl font-black text-couleur1 tracking-[0.2em] uppercase animate-pulse">
+                TurboStack
+              </h1>
+            </div>
+          </div> : <>
+            <button
+              onClick={() => setIsDocOpen(true)}
+              className="px-4 z-50 py-2 bg-couleur1 text-white rounded-lg fixed right-2 bottom-35"
+            >
+              ? {isAuthenticated}
+            </button>
+
+            {/* Le composant Documentation qui s'affiche par-dessus l'interface */}
+            <HelpDocumentation
+              isOpen={isDocOpen}
+              onClose={() => setIsDocOpen(false)}
+            />
+            {
+              windowList.includes(actualWindow) && <WorkspaceNavigationBar />
+            }
+            <main className="transition-colors duration-300">{renderContent()}</main>
+          </>}
+
+        </>}
       </>
-    );
-  }
+    }
+  ])
 
   return (
-    <>
-      <button
-        onClick={() => setIsDocOpen(true)}
-        className="px-4 z-50 py-2 bg-couleur1 text-white rounded-lg fixed right-2 bottom-35"
-      >
-        ? {isAuthenticated}
-      </button>
-
-      {/* Le composant Documentation qui s'affiche par-dessus l'interface */}
-      <HelpDocumentation
-        isOpen={isDocOpen}
-        onClose={() => setIsDocOpen(false)}
-      />
-      {
-        windowList.includes(actualWindow) && <WorkspaceNavigationBar />
-      }
-      <main className="transition-colors duration-300">{renderContent()}</main>
-    </>
+    <RouterProvider router={router} />
   );
 }
 
