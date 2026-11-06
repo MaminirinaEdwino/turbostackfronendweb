@@ -130,38 +130,6 @@ function App() {
     }
   };
 
-  // if (!isAppReady) {
-  //   return (
-  //     <div className="flex h-screen w-screen flex-col items-center justify-center bg-couleur3 dark:bg-gray-950 transition-colors duration-300">
-  //       <div className="flex flex-col items-center gap-4">
-  //         <img src={logo} alt="" />
-  //         <h1 className="text-xl font-black text-couleur1 tracking-[0.2em] uppercase animate-pulse">
-  //           TurboStack
-  //         </h1>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
-  // Vérification de l'authentification : si non connecté, affiche Login ou Register
-  // if (!isAuthenticated) {
-  //   return (
-  //     <>
-  //       {authMode === "login" ? (
-  //         <Login
-  //           onLoginSuccess={() => loginUser()}
-  //           onSwitchToRegister={() => setAuthMode("register")}
-  //         />
-  //       ) : (
-  //         <Register
-  //           onRegisterSuccess={() => setAuthMode("login")}
-  //           onSwitchToLogin={() => setAuthMode("login")}
-  //         />
-  //       )}
-  //     </>
-  //   );
-  // }
-
   const router = createBrowserRouter([
     {
       path: "/",
