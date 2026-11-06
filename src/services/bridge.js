@@ -242,5 +242,21 @@ export const GoApp = {
         if (!res.ok) throw new Error("Erreur lors de la suppression");
         const data = await res.json();
         return data.message || "Success";
+    },
+    chat: async (message) => {
+        
+        const result = await fetch(`${API_BASE}/chat`, {
+            "method": "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "message": message
+            })
+        }).then(res => res.json()).then(res => {
+            // alert(res.message)
+            return res.message
+        })
+        return result
     }
 };

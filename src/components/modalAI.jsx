@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { GoApp } from "../services/bridge";
 
 export default function AiChatModal({ isOpen, onClose }) {
     const [prompt, setPrompt] = useState("");
@@ -12,7 +13,7 @@ export default function AiChatModal({ isOpen, onClose }) {
 
     if (!isOpen) return null;
 
-    const handleSend = () => {
+    const handleSend =async () => {
         if (!prompt.trim()) return;
 
         // Ajout du message utilisateur
@@ -23,20 +24,21 @@ export default function AiChatModal({ isOpen, onClose }) {
         };
 
         setMessages((prev) => [...prev, userMsg]);
-        const currentPrompt = prompt;
+    
         setPrompt("");
-
         // Simulation de la réponse IA (À remplacer par votre appel API / WebSocket Go)
-        setTimeout(() => {
+        
+        await GoApp.chat(prompt).then((res) => {
+            // alert(res)
             setMessages((prev) => [
                 ...prev,
                 {
                     sender: "ai",
-                    text: `Résultat généré pour : "${currentPrompt}"`,
+                    text: res,
                     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 }
             ]);
-        }, 1000);
+        })
     };
 
     return (
