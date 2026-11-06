@@ -11,7 +11,7 @@ export default function ProjectPageView({ project }) {
   const getStats = () => {
     let stats = [];
 
-    if (project.type === "bdd" || project.type === "web_app") {
+    if (project.type === "bdd" || project.type === "") {
       stats.push({
         title: "DB Models",
         total: project.bdd?.models?.length || 0,
@@ -20,7 +20,13 @@ export default function ProjectPageView({ project }) {
       });
     }
 
-    if (project.type === "api"|| project.type === "web_app") {
+    if (project.type === "api"|| project.type === "webapp") {
+      stats.push({
+        title: "DB Models",
+        total: project.bdd?.models?.length || 0,
+        icon: <Database size={24} />,
+        onClick: () => dispatch(setActualWindow("db_editor")),
+      });
       stats.push({
         title: "Endpoints",
         total: project.rest_api.endpoints?.length || 0,
@@ -34,12 +40,15 @@ export default function ProjectPageView({ project }) {
         title: "App Pages",
         total: project.web_app.pages?.length || 0,
         icon: <FileText size={24} />,
+        onClick: () => dispatch(setActualWindow("page_editor")),
       });
       stats.push({
         title: "App Components",
         total: project.web_app.composant?.length || 0,
         icon: <LucidePuzzle size={24} />,
+        onClick: () => dispatch(setActualWindow("page_editor")),
       });
+      
     }
 
     if (project.type === "static") {
