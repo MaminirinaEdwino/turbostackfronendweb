@@ -17,6 +17,7 @@ import {
   PanelsTopLeft,
   SendToBack,
   ImageIcon,
+  LogOut,
 } from "lucide-react";
 import { useNavigate } from "../hooks/useNavigate";
 import { useDispatch, useSelector } from "react-redux";
@@ -316,8 +317,13 @@ export default function SideMenu() {
                 {t(item.label || item.name)}
               </span>
             </div>
+            
           );
         })}
+        <button className="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all overflow-hidden whitespace-nowrap w-full bg-couleur1 text-couleur3 border-couleur1 shadow-sm" onClick={()=>{
+            GoApp.logout()
+            navigateTo("login")
+          }}><LogOut size={14}/> {toggleMenu && "LogOut"} </button>
       </nav>
     </aside>
   );
