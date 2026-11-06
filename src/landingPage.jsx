@@ -822,7 +822,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="md:col-span-4 flex flex-col gap-2.5">
+          <div className="md:col-span-4 flex flex-col gap-2.fi5">
             <span className="font-bold uppercase tracking-wider text-emerald-200 mb-1">{t.linksTitle}</span>
             <a href="#home" className="hover:text-emerald-200 transition-colors">{t.navHome}</a>
             <a href="#about" className="hover:text-emerald-200 transition-colors">{t.navAbout}</a>

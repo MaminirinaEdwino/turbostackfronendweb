@@ -25,9 +25,10 @@ import { useAuth } from "./hooks/useAuth";
 import Login from "./components/login";
 import Register from "./components/register";
 import { setActualWindow } from "./appSlice";
-import { createBrowserRouter, RouterProvider, useLocation } from "react-router-dom"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import LandingPage from "./landingPage";
 import DownloadApp from "./download";
+import NotFoundPage from "./notfound";
 
 function App() {
   const { isAuthenticated, authMode, setAuthMode, loginUser } = useAuth();
@@ -168,6 +169,9 @@ function App() {
     }, {
       path: "/download",
       element: <DownloadApp />
+    },{
+      path: "*",
+      element: <NotFoundPage />
     },
     {
       path: "/editor",
