@@ -117,18 +117,35 @@ export const GoApp = {
 
     fetchProjectFiles: async (name) => {
         // Optionnel : si géré côté serveur ou simulé via la structure du projet
-        const project = await GoApp.fetchProjectByName(name);
-        if (!project) return [];
-        // Retourne une arborescence de base basée sur les composants/pages du projet
-        return [
-            { name: "src", path: "src", is_dir: true, children: [] },
-            { name: "main.go", path: "main.go", is_dir: false, size: 1024 }
-        ];
+        const res = await fetch(`${API_BASE}/fetchprojectfile`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "name": name
+            })
+        }).then(res=>res.json()).then(res=>{
+            return res
+        })
+        return res
     },
 
-    // getFileContent: async (name, path) => {
-    //     return "// Contenu du fichier distant";
-    // },
+    getFileContent: async (name, path) => {
+        const res = await fetch(`${API_BASE}/getfilecontent`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                projectName: name,
+                path: path
+            })
+        }).then(res=>res.json()).then(res=>{
+            return res
+        })
+        return res
+    },
 
     saveToken: async (token) => {
         localStorage.setItem("turbostack_token", token);
@@ -244,7 +261,6 @@ export const GoApp = {
         return data.message || "Success";
     },
     chat: async (message) => {
-        
         const result = await fetch(`${API_BASE}/chat`, {
             "method": "POST",
             headers: {
