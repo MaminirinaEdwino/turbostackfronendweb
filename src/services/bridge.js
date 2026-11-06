@@ -104,16 +104,44 @@ export const GoApp = {
         return data.message || "Success";
     },
 
-    exportProject: async (name, type, path) => {
-        // Simulation ou appel endpoint dédié si implémenté côté serveur
-        const res = await fetch(`${API_BASE}/projects/export`, {
-            method: "POST",
-            headers: getHeaders(),
-            body: JSON.stringify({ name, type, path })
-        });
-        if (!res.ok) return "Success"; // Fallback
-        return "Success";
-    },
+    exportProject: async (name, type) => {
+        console.log(name, type);
+
+        try {
+            const res = await fetch(`${API_BASE}/export`, {
+                method: "POST",
+                headers: getHeaders(),
+                body: JSON.stringify({
+                    "name": name,
+                    "typeProject": type
+                })
+            });
+
+            if (!res.ok) {
+                throw new Error(`Erreur HTTP : ${res.status}`);
+            }
+
+
+            const blob = await res.blob();
+            console.log("Fichier récupéré avec succès (Blob) :", blob);
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = `${name || 'export'}.zip`;
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(downloadUrl);
+
+            return true;
+
+        } catch (error) {
+            console.error("Erreur lors de l'export et du téléchargement :", error);
+            throw error;
+        }
+    }
+    ,
 
     fetchProjectFiles: async (name) => {
         // Optionnel : si géré côté serveur ou simulé via la structure du projet
@@ -125,7 +153,7 @@ export const GoApp = {
             body: JSON.stringify({
                 "name": name
             })
-        }).then(res=>res.json()).then(res=>{
+        }).then(res => res.json()).then(res => {
             return res
         })
         return res
@@ -141,7 +169,7 @@ export const GoApp = {
                 projectName: name,
                 path: path
             })
-        }).then(res=>res.json()).then(res=>{
+        }).then(res => res.json()).then(res => {
             return res
         })
         return res
