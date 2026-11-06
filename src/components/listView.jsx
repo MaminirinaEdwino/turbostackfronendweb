@@ -1,10 +1,34 @@
 import { useState } from "react";
 import AssetUploaderModal from "./assetUploader";
 import LayoutHeader from "./layoutHeader";
+import { GoApp } from "../services/bridge";
+import { useSelector } from "react-redux";
 
 export default function ListView({ content, elementView, newIcon, sectionName, newText, reloadAsset }) {
     const [showModal, setShowModal] = useState(false);
+    const projectName = useSelector((state) => state.app.actualProject)
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        let base64String
+        if (file) {
+            const reader = new FileReader();
 
+            // Événement déclenché lorsque la lecture est terminée
+            reader.onload = async function (e) {
+                base64String = e.target.result; // Contient la chaîne Base64 complète (data:image/...;base64,...)
+                // console.log(base64String);
+                // console.log(file)
+                console.log(await GoApp.uploadAsset(projectName, file.name, base64String))
+                reloadAsset()
+                // Vous pouvez utiliser cette chaîne pour l'afficher ou l'envoyer
+            };
+
+            // Lit le fichier en tant qu'URL de données (Data URL) encodée en Base64
+            reader.readAsDataURL(file);
+            reloadAsset()
+            // console.log(content)
+        }
+    }
     return (
         <main className="flex-1 p-6 md:p-8 overflow-y-auto relative min-h-screen bg-gray-50/50 dark:bg-gray-900/50">
             {/* Header de la section */}
@@ -40,13 +64,14 @@ export default function ListView({ content, elementView, newIcon, sectionName, n
             )}
 
             {/* Bouton d'action flottant (FAB) repositionné et amélioré */}
-            <button
-                onClick={() => setShowModal(!showModal)}
+            <input type="file" name="" id="fileUploader" className="hidden" accept="image/*" onChange={handleFileChange} />
+            <label htmlFor="fileUploader"
+
                 className="fixed bottom-6 right-6 z-40 text-couleur1 bg-couleur3 dark:bg-gray-950 border border-white/20 hover:border-couleur1 dark:border-couleur1 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-200 rounded-xl px-4 py-2.5 flex items-center gap-2.5 font-medium text-sm backdrop-blur-md z-50"
             >
                 <span className="text-lg flex items-center justify-center">{newIcon}</span>
                 <span className="tracking-wide">{newText}</span>
-            </button>
+            </label>
         </main>
     );
 }
