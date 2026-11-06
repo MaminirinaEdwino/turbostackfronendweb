@@ -29,6 +29,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import LandingPage from "./landingPage";
 import DownloadApp from "./download";
 import NotFoundPage from "./notfound";
+import { Settings } from "lucide-react";
+import LanguageToggle from "./components/languageToggle";
+import DarkModeToggle from "./components/darkModeToggle";
 
 function App() {
   const { isAuthenticated, authMode, setAuthMode, loginUser } = useAuth();
@@ -38,6 +41,7 @@ function App() {
   const [isAppReady, setIsAppReady] = useState(false);
   const dispatch = useDispatch()
   const [isDocOpen, setIsDocOpen] = useState(false);
+  const [setttingMenuState, setSettingMenuState] = useState(false)
 
   const windowList = [
     "api_editor",
@@ -137,7 +141,7 @@ function App() {
     }, {
       path: "/download",
       element: <DownloadApp />
-    },{
+    }, {
       path: "*",
       element: <NotFoundPage />
     },
@@ -165,12 +169,22 @@ function App() {
               </h1>
             </div>
           </div> : <>
-            <button
-              onClick={() => setIsDocOpen(true)}
-              className="px-4 z-50 py-2 bg-couleur1 text-white rounded-lg fixed right-2 bottom-35"
-            >
-              ? {isAuthenticated}
-            </button>
+            <div className={"fixed right-2 bottom-30 gap-1 flex flex-col items-end z-50"}>
+              {setttingMenuState && <>
+                <LanguageToggle />
+                <button
+                  title="Help Section"
+                  onClick={() => setIsDocOpen(true)}
+                  className="px-4 z-50 py-2 bg-couleur1 text-white rounded-lg bottom-35"
+                >
+                  ?
+                </button>
+                <DarkModeToggle />
+              </>}
+              <div className={"p-3 rounded-full border border-couleur1/50 " + (setttingMenuState ? "text-white bg-couleur1" : "text-couleur1 bg-couleur1/10")} onClick={() => setSettingMenuState(!setttingMenuState)}>
+                <Settings size={18} />
+              </div>
+            </div>
 
             {/* Le composant Documentation qui s'affiche par-dessus l'interface */}
             <HelpDocumentation
